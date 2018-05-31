@@ -1086,7 +1086,7 @@ process_netflow_v9(struct flow_packet *fp, struct flowd_config *conf,
 		default:
 			if (flowset_id < NF9_MIN_RECORD_FLOWSET_ID) {
 				logit(LOG_WARNING, "Received unknown netflow "
-				    "v.9 reserved flowset type %d"
+				    "v.9 reserved flowset type %d "
 				    "from %s/0x%08x (flowset len: %d)", flowset_id,
 				    addr_ntop_buf(&fp->flow_source), source_id, flowset_len);
 				/* XXX ratelimit */
@@ -1100,7 +1100,13 @@ process_netflow_v9(struct flow_packet *fp, struct flowd_config *conf,
 			total_flows += flowset_flows;
 			break;
 		}
+
+
 		offset += flowset_len;
+
+		if (flowset_len == 0)
+			break;
+
 		if (offset == fp->len)
 			break;
 		/* XXX check header->count against what we got */
